@@ -1,9 +1,9 @@
-﻿using Aleab.CefUnity.Structs;
-using System;
+﻿using System;
 using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Security;
+using Aleab.CefUnity.Structs;
 using UnityEngine;
 using Xilium.CefGlue;
 
@@ -33,7 +33,7 @@ namespace Aleab.CefUnity
         {
             if (this.sHost != null)
             {
-                lock (sPixelLock)
+                lock(sPixelLock)
                 {
                     if (this.sHost != null)
                     {
@@ -42,6 +42,22 @@ namespace Aleab.CefUnity
                     }
                 }
             }
+        }
+
+        public void OnMouseDownEvent(int x, int y)
+        {
+            CefMouseEvent mouseEvent = new CefMouseEvent();
+            mouseEvent.X = x;
+            mouseEvent.Y = y;
+            sHost.SendMouseClickEvent(mouseEvent, CefMouseButtonType.Left, true, 1);
+        }
+
+        public void OnMouseWheelEvent(int x, int y)
+        {
+            CefMouseEvent mouseEvent = new CefMouseEvent();
+            mouseEvent.X = x;
+            mouseEvent.Y = y;
+            sHost.SendMouseWheelEvent(mouseEvent, 100, 100);
         }
 
         public void Shutdown()
@@ -105,10 +121,10 @@ namespace Aleab.CefUnity
             private void HideScrollbars(CefFrame frame)
             {
                 string jsScript = "var head = document.head;" +
-                                  "var style = document.createElement('style');" +
-                                  "style.type = 'text/css';" +
-                                  "style.appendChild(document.createTextNode('::-webkit-scrollbar { visibility: hidden; }'));" +
-                                  "head.appendChild(style);";
+                    "var style = document.createElement('style');" +
+                    "style.type = 'text/css';" +
+                    "style.appendChild(document.createTextNode('::-webkit-scrollbar { visibility: hidden; }'));" +
+                    "head.appendChild(style);";
                 frame.ExecuteJavaScript(jsScript, string.Empty, 107);
             }
         }
@@ -153,7 +169,7 @@ namespace Aleab.CefUnity
             {
                 if (browser != null)
                 {
-                    lock (sPixelLock)
+                    lock(sPixelLock)
                     {
                         if (browser != null)
                             Marshal.Copy(buffer, this.client.sPixelBuffer, 0, this.client.sPixelBuffer.Length);
@@ -166,21 +182,13 @@ namespace Aleab.CefUnity
                 return false;
             }
 
-            protected override void OnCursorChange(CefBrowser browser, IntPtr cursorHandle, CefCursorType type, CefCursorInfo customCursorInfo)
-            {
-            }
+            protected override void OnCursorChange(CefBrowser browser, IntPtr cursorHandle, CefCursorType type, CefCursorInfo customCursorInfo) { }
 
-            protected override void OnPopupSize(CefBrowser browser, CefRectangle rect)
-            {
-            }
+            protected override void OnPopupSize(CefBrowser browser, CefRectangle rect) { }
 
-            protected override void OnScrollOffsetChanged(CefBrowser browser, double x, double y)
-            {
-            }
+            protected override void OnScrollOffsetChanged(CefBrowser browser, double x, double y) { }
 
-            protected override void OnImeCompositionRangeChanged(CefBrowser browser, CefRange selectedRange, CefRectangle[] characterBounds)
-            {
-            }
+            protected override void OnImeCompositionRangeChanged(CefBrowser browser, CefRange selectedRange, CefRectangle[] characterBounds) { }
         }
 
         #endregion Handlers
